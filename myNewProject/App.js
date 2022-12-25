@@ -14,6 +14,9 @@ import PostScreen from "./screens/mainScreen/PostsScreen";
 import CreatePostsScreen from "./screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./screens/mainScreen/ProfileScreen";
 
+import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
 
@@ -32,19 +35,19 @@ const useRoute = (isAuth) => {
   }
   return <MainTab.Navigator>
   <MainTab.Screen options={{
-       headerShown: false,
+       headerShown: false, tabBarIcon: ({focused, color, size}) => <Ionicons name="grid-outline" size={size} color={color} />,
       }} name='Posts' component={PostScreen}/>
   <MainTab.Screen options={{
-       headerShown: false,
+       headerShown: false, tabBarIcon: ({focused, color, size}) => <AntDesign name="pluscircleo" size={size} color={color} />,
       }} name='Create' component={CreatePostsScreen}/>
   <MainTab.Screen options={{
-       headerShown: false,
+       headerShown: false, tabBarIcon: ({focused, color, size}) => <AntDesign name="user" size={size} color={color} />,
       }} name='Profile' component={ProfileScreen}/>
 </MainTab.Navigator> 
 }
 
 export default function App() {
-const routing = useRoute(null);
+const routing = useRoute(true);
   const [fontsLoaded] = useFonts({
 'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
 'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
