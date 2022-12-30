@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+// import { StyleSheet, Text, View } from 'react-native';
 import { useCallback } from 'react';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
@@ -38,7 +38,7 @@ const useRoute = (isAuth) => {
        headerShown: false, tabBarIcon: ({focused, color, size}) => <Ionicons name="grid-outline" size={size} color={color} />,
       }} name='Posts' component={PostScreen}/>
   <MainTab.Screen options={{
-       headerShown: false, tabBarIcon: ({focused, color, size}) => <AntDesign name="pluscircleo" size={size} color={color} />,
+       headerShown: false, tabBarIcon: ({focused, color, size}) => <AntDesign name="pluscircleo" size={35} color="#FF6C00" />,
       }} name='Create' component={CreatePostsScreen}/>
   <MainTab.Screen options={{
        headerShown: false, tabBarIcon: ({focused, color, size}) => <AntDesign name="user" size={size} color={color} />,
@@ -69,13 +69,15 @@ return (
 )
 }
 
+// export default function App() { 
+//   return <View style={styles.container}><Text>fddgdgd</Text></View>
+// }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#fff',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+// });
