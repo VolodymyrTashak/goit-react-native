@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { useDispatch } from 'react-redux';
+
+import { authSingUpUser } from '../../redux/auth/authOperations';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,6 +16,8 @@ password: '',
 const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const dispatch = useDispatch();
+
   // const [dimensions, setDimensions] = useState(Dimensions.get('window').width -20 * 2);
 
 // useEffect(() => {
@@ -35,8 +40,9 @@ const keyboardHide = () => {
 }
 
   const hundleSubmit = () => {
-setState(initialState);
-console.log("state: ", state);
+    dispatch(authSingUpUser(state));
+    setState(initialState);
+    console.log("state: ", state);
   }
 
   return (

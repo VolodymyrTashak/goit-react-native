@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Image, TouchableWithoutFeedback, TextInput, } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, TouchableWithoutFeedback, TextInput, Keyboard } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
+
+import db from '../../firebase/config';
 
 const CreatePostsScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
@@ -46,10 +48,11 @@ const takePhoto = async () => {
 };
 
 const sendPhoto = () => {
+  uploadPhotoToServer();
   navigation.navigate("DefaultScreen", { photo });
-  setPlace('');
-  setDescription('');
-  sendPhoto(null);
+  // setPlace('');
+  // setDescription('');
+  // sendPhoto(null);
 };
 
 const clearPost = () => {
@@ -57,6 +60,17 @@ const clearPost = () => {
   setDescription('');
   sendPhoto(null);
 }
+
+const uploadPhotoToServer = async () => {
+  const responce = await fetch(photo);
+  const file = await responce.blob();
+  const uniquePostId = Date.now().toString();
+
+  await db.storage().ref(`postImage/${uniquePostId}`).put(file);
+
+  const processedPhoto = await db.storage().ref('postImage').child(uniquePostId).getDownloadURL();
+  console.log("processedPhoto", processedPhoto);
+};
 
 return (
   <TouchableWithoutFeedback onPress={keyboardHide}>

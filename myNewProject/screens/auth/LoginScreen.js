@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
+import { useDispatch } from 'react-redux'; 
+
+import { authSingInUser } from '../../redux/auth/authOperations';
   
 const initialState = {
     email: '',
@@ -9,6 +12,7 @@ const initialState = {
 const LoginScreen = ({ navigation }) => { 
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
+    const dispatch = useDispatch();
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
@@ -17,6 +21,7 @@ const LoginScreen = ({ navigation }) => {
       
         const hundleSubmit = () => {
       setState(initialState);
+      dispatch(authSingInUser(state));
       console.log("state: ", state);
         }
 
