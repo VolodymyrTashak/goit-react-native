@@ -31,7 +31,6 @@ return null;
 return (
   <Provider store={store}>
     <Main />
-    {/* <NavigationContainer>{routing}</NavigationContainer> */}
   </Provider>
 )
 }

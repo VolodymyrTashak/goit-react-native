@@ -1,11 +1,15 @@
 import React, {useState, useEffect} from "react";
+import { useSelector } from "react-redux";
 import { StyleSheet, Text, TouchableOpacity, View, Image, TouchableWithoutFeedback, TextInput, Keyboard } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
+import * as ImagePicker from 'expo-image-picker';
+
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons'; 
 
 import db from '../../firebase/config';
+import { getLogin, getUserId } from "../../redux/auth/selectors";
 
 const CreatePostsScreen = ({ navigation }) => {
     const [camera, setCamera] = useState(null);
@@ -13,6 +17,7 @@ const CreatePostsScreen = ({ navigation }) => {
     const [location, setLocation] = useState(null);
     const [place, setPlace] = useState('');
     const [description, setDescription] = useState('');
+
 
     useEffect(() => {
       (async () => {
@@ -31,8 +36,8 @@ const CreatePostsScreen = ({ navigation }) => {
           console.log('Permission to access location was denied');
           return;
         }
-        let location = await Location.getCurrentPositionAsync();
-        setLocation(location);
+        let locationRes = await Location.getCurrentPositionAsync();
+        setLocation(locationRes);
       })();
     }, []);
 
@@ -48,18 +53,20 @@ const takePhoto = async () => {
 };
 
 const sendPhoto = () => {
-  uploadPhotoToServer();
-  navigation.navigate("DefaultScreen", { photo });
-  // setPlace('');
-  // setDescription('');
-  // sendPhoto(null);
-};
-
-const clearPost = () => {
+  uploadPostToServer();
+  navigation.navigate("DefaultScreen");
+  setPhoto(null);
   setPlace('');
   setDescription('');
-  sendPhoto(null);
-}
+};
+
+const userId = useSelector(getUserId);
+const login = useSelector(getLogin);
+
+const uploadPostToServer = async () => {
+  const photo = await uploadPhotoToServer();
+  const createPost = await db.firestore().collection('posts').add({ photo, place, description, location, userId, login });
+};
 
 const uploadPhotoToServer = async () => {
   const responce = await fetch(photo);
@@ -69,7 +76,27 @@ const uploadPhotoToServer = async () => {
   await db.storage().ref(`postImage/${uniquePostId}`).put(file);
 
   const processedPhoto = await db.storage().ref('postImage').child(uniquePostId).getDownloadURL();
-  console.log("processedPhoto", processedPhoto);
+
+  return processedPhoto;
+};
+
+const clearPost = () => {
+  setPlace('');
+  setDescription('');
+  sendPhoto(null);
+}
+
+const pickImage = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  if (!result.canceled) {
+    setPhoto(result.assets[0].uri);
+  }
 };
 
 return (
@@ -78,34 +105,38 @@ return (
       <Camera style={styles.camera} ref={setCamera}>
        {photo && (
         <View style={styles.photoContainer}>
-         <Image source={{uri: photo }} style={{height: 240,
-          width: 360}} />
-        </View>)}
+         <Image source={{uri: photo }} 
+          style={{height: 240, width: 360 }} />
+        </View>
+        )}
         <TouchableOpacity activeOpacity={0.8} style={styles.btn} onPress={takePhoto}>
           <Ionicons name="md-camera" size={32} color="#BDBDBD" />
         </TouchableOpacity>
       </Camera>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={pickImage}>
         {!photo ? (
-          <Text>Загрузите фото</Text>
+          <Text style={styles.text}>Загрузите фото</Text>
         ) : (
-          <Text>Редактировать фото</Text>
+          <Text style={styles.text}>Редактировать фото</Text>
         )}
       </TouchableOpacity>
         <TextInput 
                textAlign={"left"} placeholder={"Название..."} placeholderTextColor={"#bdbdbd"} value={description}
-              onFocus={setDescription}
+              onChangeText={setDescription}
          />
         <TextInput 
                textAlign={'left'} placeholder={"Местность..."} placeholderTextColor={"#bdbdbd"} value={place}
-              onFocus={setPlace} 
+               onChangeText={setPlace} 
         />
       <View>
-        <TouchableOpacity activeOpacity={0.8} style={styles.sendBtn} onPress={sendPhoto}>
-         <Text style={styles.sendText}>Опубликовать</Text>
+        <TouchableOpacity activeOpacity={0.8} onPress={sendPhoto} disabled={photo ? false : true} style={photo ? 
+          { ...styles.sendBtn, backgroundColor: "#FF6C00" } : styles.sendBtn
+        }>
+         <Text style={photo ? 
+         { ...styles.sendText, color: "#fff" } : styles.sendText }>Опубликовать</Text>
         </TouchableOpacity>
       </View>
-        <TouchableOpacity activeOpacity={0.8} onPress={clearPost} >
+        <TouchableOpacity activeOpacity={0.8} onPress={clearPost} style={styles.deleteBtn}>
           <Feather name="trash-2" size={24} color="#BDBDBD" />
         </TouchableOpacity>
     </View>
@@ -121,24 +152,22 @@ const styles = StyleSheet.create({
       paddingVertical: 32,
       backgroundColor: "#ffffff",
       justifyContent: "space-between",
-      // marginTop: 32,
-      // alignItems: 'center',
     },
     camera: {
-      // backgroundColor: '#E8E8E8',
       height: 240,
       width: 360,
+      justifyContent: 'center',
+      alignItems: "center",
       borderColor: "#E8E8E8",
       backgroundColor: "#F6F6F6",
-      // flex: 1,
       alignItems: 'center',
       borderRadius: 20,
       marginBottom: 8,
-      // justifyContent: 'center',
     },
     btn: {
       borderWidth: 1,
       borderColor: '#fff',
+      backgroundColor: "fff",
       width: 60,
       height: 60,
       borderRadius: 50,
@@ -146,7 +175,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     }, 
     text: {
-      color: '#fff',
+      color: '#BDBDBD',
     },
     photoContainer: {
      position: 'absolute',
@@ -158,15 +187,25 @@ const styles = StyleSheet.create({
     sendBtn: {
       marginHorizontal: 30,
       height: 51,
-      backgroundColor: '#FF6C00',
+      backgroundColor: '#F6F6F6',
       borderRadius: 100,
       justifyContent: 'center',
       marginTop: 20,
       alignItems: 'center',
     },
     sendText: {
-      color: "#FFFFFF",
+      color: "#BDBDBD",
       fontSize: 20,
+    },
+    deleteBtn: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#F6F6F6',
+      borderRadius: 20,
+      marginRight: 'auto',
+      marginLeft: "auto",
+      height: 40,
+      width: 70,
     },
   });
 

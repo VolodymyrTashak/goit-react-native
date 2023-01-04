@@ -2,12 +2,13 @@ import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker} from 'react-native-maps';
 
  const MapScreen = ({ route }) => { 
-    // const location = route.params.location;
-    // const placeName = route.params.place;
+    const location = route.params.location;
+    const placeName = route.params.place;
 
   return (
     <View style={styles.container}>
-      {/* <MapView style={styles.map} initialRegion={{
+      <MapView style={{ flex: 1 }} 
+        initialRegion={{
          latitude: location.latitude,
          longitude: location.longitude,
          latitudeDelta: 0.001,
@@ -18,8 +19,8 @@ import MapView, { Marker} from 'react-native-maps';
               longitude: location.longitude,
               }} title={placeName}
             />
-      </MapView> */}
-      <Text>fddngdkkd</Text>
+      </MapView>
+      {/* <Text>fddngdkkd</Text> */}
     </View>
   )
 }
