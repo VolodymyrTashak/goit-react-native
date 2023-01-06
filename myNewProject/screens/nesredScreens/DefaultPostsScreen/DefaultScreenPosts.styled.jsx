@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginRight: 24,
     },
-    count: {
+    commentsCount: {
         fontFamily: "Roboto-Regular",
         lineHeight: 19,
         fontSize: 16,

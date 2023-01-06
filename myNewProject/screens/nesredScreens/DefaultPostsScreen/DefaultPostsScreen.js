@@ -4,28 +4,30 @@ import { View, Image, Text, FlatList, TouchableOpacity, Button  } from "react-na
 import { Feather } from '@expo/vector-icons'; 
 
 import db from "../../../firebase/config";
+import { getLogin, getEmail } from "../../../redux/auth/selectors";
 import styles from "./DefaultScreenPosts.styled";
 
 const DefaultScreenPosts = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
-  const { email, login } = useSelector((state) => state.auth);
+  const login = useSelector(getLogin);
+  const email = useSelector(getEmail);
 
   const getAllPost = async () => {
-   await db.firestore().collection('post').onSnapshot((data) => 
+   await db.firestore().collection('posts').onSnapshot((data) => 
    setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
    );
-  }
+  };
+
+  const like = async (item) => {
+    let likes = item.likes ? item.likes + 1 : 0 + 1;
+
+    await db.firestore().collection('posts').doc(item.id).set({ ...item, likes });
+   };
 
   useEffect(() => {
     getAllPost();
   }, []);
-
-  // useEffect(() => {
-  //   if (route.params) {
-  //     setPosts(prevState => [...prevState, route.params]);
-  //   }
-  // }, [route.params]);
 
 return (
 <View style={styles.container}>
@@ -43,13 +45,13 @@ return (
     <View style={styles.postLabel}>
       <View style={{ alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
       <TouchableOpacity style={styles.comments} onPress={() => navigation.navigate("Comments", { item, })}>
-    <Feather name="message-circle" size={24} color={item.count ? "#FF6C00" : "#BDBDBD"} />
-        <Text style={{...styles.comments, color: item.comments ? "#124250" : "#BDBDBD",}}>{item.comments ? item.comments : 0}</Text>
+    <Feather name="message-circle" size={24} color={item.commentsCount ? "#FF6C00" : "#BDBDBD"} />
+        <Text style={{...styles.commentsCount, color: item.commentsCount ? "#124250" : "#BDBDBD",}}>{item.comments ? item.comments : 0}</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.likes} onPress={() => {}}>
+    <TouchableOpacity style={styles.likes} onPress={() => {like(item)}}>
     <Feather name="thumbs-up" size={24} color={item.likes ? "#FF6C00" : "#BDBDBD"} />
     </TouchableOpacity>
-    <Text style={{...styles.comments, color: item.likes ? "#124250" : "#BDBDBD",}}>{item.likes ? item.likes : 0}</Text>
+    <Text style={{...styles.commentsCount, color: item.likes ? "#124250" : "#BDBDBD",}}>{item.likes ? item.likes : 0}</Text>
       </View>
       <View>
       <TouchableOpacity style={styles.place} onPress={() => navigation.navigate("Map")}>
@@ -60,19 +62,8 @@ return (
     </View>
     </View>
     )}/>
-    
-    <Button title="go to map" onPress={() => navigation.navigate("Map")} />
-    <Button title="go to comments" onPress={() => navigation.navigate("Comments")} />
 </View>
 );
 };
-
-// const styles = StyleSheet.create({
-//     container: {
-//       flex: 1,
-//       alignItems: 'center',
-//       justifyContent: 'center',
-//     },
-//   });
 
   export default DefaultScreenPosts;

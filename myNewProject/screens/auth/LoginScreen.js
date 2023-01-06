@@ -12,6 +12,7 @@ const initialState = {
 const LoginScreen = ({ navigation }) => { 
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
+    const [isHidePassword, setIsHidePassword] = useState(true);
     const dispatch = useDispatch();
 
     const keyboardHide = () => {
@@ -32,31 +33,44 @@ const LoginScreen = ({ navigation }) => {
           style={styles.image} 
           source={require('../../assets/imageBG.jpg')}
           >
+            <View style={{...styles.form, paddingBottom: isShowKeyboard ? 0 : 111}}>
             <KeyboardAvoidingView 
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-            <View style={{...styles.form, height: !isShowKeyboard ? 549 : 374, paddingBottom: !isShowKeyboard ? 78 : 0,}}>
+            <View style={{ marginBottom: isShowKeyboard ? 32 : 43 }}>
               <Text style={styles.title} >Войти</Text>
               <TextInput 
-              style={styles.input} textAlign={"center"} placeholder={"Адрес электронной почты"} placeholderTextColor={"#bdbdbd"} 
+              style={{ ...styles.input, marginBottom: 16, backgroundColor: "#F6F6F6", borderColor: "#E8E8E8",}}  placeholder={"Адрес электронной почты"} placeholderTextColor={"#bdbdbd"} 
               value={state.email}
               onFocus={() => setIsShowKeyboard(true)}
               onChangeText={(value) => setState((prevState) => ({...prevState, email: value}))}
               />
+              <View>
               <TextInput 
-              style={{...styles.input, marginBottom: !isShowKeyboard ? 43 : 180,}} textAlign={"center"} placeholder={"Пароль"} placeholderTextColor={"#bdbdbd"} secureTextEntry={true} 
+              style={{...styles.input, backgroundColor: "#F6F6F6", borderColor: "#E8E8E8", position: "relative", }}  placeholder={"Пароль"} placeholderTextColor={"#bdbdbd"} secureTextEntry={isHidePassword} 
               value={state.password}
               onFocus={() => setIsShowKeyboard(true)}
               onChangeText={(value) => setState((prevState) => ({...prevState, password: value}))}
               />
-              <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={hundleSubmit} >
+              <TouchableOpacity activeOpacity={0.8} style={styles.buttonShow} onPress={() => {
+                setIsHidePassword((prevState) => !prevState);
+                }}>
+              <Text style={styles.buttonShowText}>Показать</Text>
+              </TouchableOpacity>
+              </View>
+          </View>
+            </KeyboardAvoidingView>
+            {!isShowKeyboard && (
+              <View>
+                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={hundleSubmit} >
                <Text style={styles.buttonText} >Войти</Text>
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Register")} >
                <Text style={styles.logText}>Нет аккаунта? Зарегистрироваться</Text>
               </TouchableOpacity>
-          </View>
-            </KeyboardAvoidingView>
+              </View>
+            )}
+            </View>
         </ImageBackground>
         </View>
         </TouchableWithoutFeedback>
@@ -75,8 +89,6 @@ const LoginScreen = ({ navigation }) => {
     justifyContent: "flex-end",
   },
   form: {
-     width: "100%",
-     paddingHorizontal: 16,
      backgroundColor: '#fff',
      alignItems: 'center',
      borderTopRightRadius: 25,
@@ -87,13 +99,16 @@ const LoginScreen = ({ navigation }) => {
     fontFamily: "Roboto-Medium",
     color: "#212121",
     marginTop: 32,
-    marginBottom: 32,
+    marginBottom: 72,
+    lineHeight: 35,
+    textAlign: "center",
   },
   input: {
     fontFamily: "Roboto-Regular",
     borderWidth: 1,
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    // paddingHorizontal: 16,
+    // marginBottom: 16,
+    paddingLeft: 15,
     borderColor: "#e8e8e8",
     height: 50,
     borderRadius: 8,
@@ -116,6 +131,16 @@ const LoginScreen = ({ navigation }) => {
     textAlign: "center",
     fontSize: 16,
   },
+  buttonShow: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+  },
+  buttonShowText: {
+    fontFamily: "Roboto-Regular",
+    color: "#1B4371",
+    fontSize: 16,
+  },
   logText: {
     color: "#1B4371",
     textAlign: "center",
@@ -124,3 +149,8 @@ const LoginScreen = ({ navigation }) => {
 });
 
   export default LoginScreen;
+
+
+
+
+

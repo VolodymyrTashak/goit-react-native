@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 
 import { Feather } from '@expo/vector-icons';
@@ -33,7 +33,7 @@ const ProfileScreen = ({ navigation }) => {
 
 return (
  <View style={styles.container}>
-  <Image source={image} />
+  <Image style={styles.image} source={require("../../assets/imageBG.jpg")} />
   <View style={styles.box}>
     <Image source={image} style={styles.boxAvatar} />
       <TouchableOpacity activeOpacity={0.8} style={styles.btnAdd}>
@@ -48,8 +48,8 @@ return (
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.postsBox}>
-            <Image source={{ uir: item.photo }}
-            style={{ width: 350, height: 200, borderRadius: 10 }} />
+            <Image source={{ uri: item.photo }}
+            style={{ width: 370, height: 240, borderRadius: 8 }} />
             <Text style={styles.postsName}>{item.description}</Text>
             <View style={styles.postsLabel}>
               <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'center', }}>
@@ -75,12 +75,12 @@ return (
           </View>
         )}
       />
-  </View>
-
-  {/* <Text>ProfileScreen</Text> */}
+    </View>
  </View>
 )
 };
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -89,14 +89,16 @@ const styles = StyleSheet.create({
       backgroundColor: "#fff",
     },
     image: {
-      position: 'absolute',
-      top: 0,
-      width: "100%",
       flex: 1,
+      // resizeMode: "cover",
+      // justifyContent: "flex-end",
+      position: "absolute",
+    width: "100%",
+    top: 0,
     },
     box: {
       alignItems: 'center',
-      height: 600,
+      height: 500,
       borderTopLeftRadius: 25,
       borderTopRightRadius: 25,
       backgroundColor: "#fff",
@@ -105,18 +107,18 @@ const styles = StyleSheet.create({
       position: 'absolute',
       top: -55,
       left: 135,
+      zIndex: 1,
       width: 120,
       height: 120,
       borderRadius: 16,
-      zIndex: 1,
     },
     btnAdd: {
       position: 'absolute',
       top: 21,
       left: 240,
+      zIndex: 2,
       borderRadius: 20,
       backgroundColor: '#fff',
-      zIndex: 2,
     },
     btnEx: {
       position: 'absolute',
@@ -127,7 +129,6 @@ const styles = StyleSheet.create({
     boxTitle: {
       fontFamily: "Roboto-Bold",
       fontSize: 30,
-      // fontWeight: 500,
       marginTop: 92,
       marginBottom:32,
       textAlign: 'center',
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
       marginVertical: 8,
     },
     postsLabel: {
-      justifyContent: 'center',
+      justifyContent: "space-between",
       flexDirection: 'row',
     },
     comments: {

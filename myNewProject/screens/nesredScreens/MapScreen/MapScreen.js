@@ -20,7 +20,6 @@ import MapView, { Marker} from 'react-native-maps';
               }} title={placeName}
             />
       </MapView>
-      {/* <Text>fddngdkkd</Text> */}
     </View>
   )
 }
