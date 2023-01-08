@@ -46,7 +46,7 @@ useEffect(() => {
             <KeyboardAvoidingView 
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-            <View style={{ marginBottom: isShowKeyboard ? 32 : 43 }}>
+            <View style={{ marginBottom: isShowKeyboard ? 200 : 43 }}>
               <Text style={styles.title} >Войти</Text>
               <TextInput 
               style={{ ...styles.input, marginBottom: 16, backgroundColor: "#F6F6F6", borderColor: "#E8E8E8",}}  placeholder={"Адрес электронной почты"} placeholderTextColor={"#bdbdbd"} 
