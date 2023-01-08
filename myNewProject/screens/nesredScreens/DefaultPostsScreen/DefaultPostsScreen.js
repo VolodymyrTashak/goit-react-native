@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { View, Image, Text, FlatList, TouchableOpacity, Button  } from "react-native";
+import { View, Image, Text, FlatList, TouchableOpacity } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 
 import db from "../../../firebase/config";
@@ -54,9 +54,9 @@ return (
     <Text style={{...styles.commentsCount, color: item.likes ? "#124250" : "#BDBDBD",}}>{item.likes ? item.likes : 0}</Text>
       </View>
       <View>
-      <TouchableOpacity style={styles.place} onPress={() => navigation.navigate("Map")}>
+      <TouchableOpacity style={styles.place} onPress={() => navigation.navigate("Map", { location: item.location, placeName: item.place })}>
        <Feather name="map-pin" size={24} color="#BDBDBD" />
-       <Text style={styles.placeText}>Map</Text>
+       <Text style={styles.placeText}>{item.place}</Text>
       </TouchableOpacity>
       </View>
     </View>

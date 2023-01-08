@@ -1,4 +1,5 @@
 import db from '../../firebase/config';
+import { Alert } from 'react-native';
 import { authSlice } from './authReducer';
 
 const { updateUserProfile, authSignOut, authStateChange } = authSlice.actions;
@@ -18,18 +19,18 @@ export const authSingUpUser = ({ login, email, password }) => async (dispatch, g
         dispatch(updateUserProfile({ userId: uid, login: displayName, email }));
         console.log('user', user);
     } catch (error) {
-        console.log('error', error);
-        console.log('error.message', error.message);
+        Alert.alert('error', error);
+        Alert.alert('error.message', error.message);
     }
 };
 
-export const authSingInUser = (email, password) => async (dispatch, getState) => {
+export const authSingInUser = ({ email, password }) => async (dispatch, getState) => {
     try {
         const user = await db.auth().signInWithEmailAndPassword(email, password);
         console.log('user', user);
             } catch (error) {
-                console.log('error', error);
-                console.log('error.message', error.message);
+                Alert.alert('error', error);
+                Alert.alert('error.message', error.message);
             }
 };
 

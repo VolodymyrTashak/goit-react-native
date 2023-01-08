@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker} from 'react-native-maps';
 
  const MapScreen = ({ route }) => { 
@@ -26,11 +26,6 @@ import MapView, { Marker} from 'react-native-maps';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  map: {
-    // width: '100%',
-    // height: '100%',
     flex: 1,
   },
 });

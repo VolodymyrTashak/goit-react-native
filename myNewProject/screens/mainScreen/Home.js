@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -5,17 +6,24 @@ import { AntDesign } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 
-import PostScreen from './PostsScreen';
+import { authSingOutUser } from "../../redux/auth/authOperations";
+
+import PostsScreen from './PostsScreen';
 import CreatePostsScreen from './CreatePostsScreen';
 import ProfileScreen from './ProfileScreen';
 
 const MainTab = createBottomTabNavigator();
 
 const Home = ({ navigation }) => {
+    const dispatch = useDispatch();
+
+    const signOut = () => {
+        dispatch(authSingOutUser());
+      };
+      
 return (
-    <MainTab.Navigator 
-    initialRouteName='Posts'
-    screenOptions={{
+    <MainTab.Navigator initialRouteName='Posts'
+     screenOptions={{
         tabBarstyle: {
             height: 80,
             paddingHorizontal: 60,
@@ -25,87 +33,50 @@ return (
         tabBarActiveTintColor: "#FF6C00",
         tabBarInactiveTintColor: "#124250",
         tabBarShowLabel: false,
-    }}
-    >
-        <MainTab.Screen 
-          name='Posts' 
-          component={PostScreen} 
-          options={{
-           headerShown: false, 
-           tabBarIcon: ({focused, color, size}) => (
-              <TouchableOpacity>
-                  <Ionicons name="grid-outline" size={size} color={color} focused={focused}/>
-              </TouchableOpacity>
-           ),
-           tabBarHideOnKeyboard: true,
-           tabBarItemStyle: {
+      }}>
+        <MainTab.Screen options={{
+            tabBarIcon: ({focused, color, size}) => <Ionicons name="grid-outline" size={size} color={color} focused={focused} />,
+         headerShown: false, 
+         tabBarItemStyle: {
             height: 40,
             width: 70,
-           },
-          }} 
-        />
-        <MainTab.Screen  
-            name='Create' 
-            component={CreatePostsScreen} 
-            options={{
-                 headerShown: false, 
-                 tabBarIcon: ({focused, color, size}) => (
-                    <TouchableOpacity>
-                        <AntDesign name="pluscircleo" size={size} color="#FFFFFF" focused={focused} />
-                    </TouchableOpacity>
-                 ),
-                 tabBarHideOnKeyboard: true,
-                 tabBarStyle: {
-                    display: "none",
-                },
-                tabBarItemStyle: {
-                    height: 40,
-                    width: 70,
-                    backgroundColor: "#124250",
-                    borderRadius: 20,
-                    marginHorizontal: 31,
-                   },
-                   headerLeft: () => (
-                    <TouchableOpacity
-                     activeOpacity={0.8}
-                      style={{marginLeft: 16 }}
-                       onPress={() => navigation.navigate("Posts")}>
-                         <Feather name="arrow-left" size={24} color="#BDBDBD" />
-                    </TouchableOpacity>
-                   ),
-                   headerStyle: {
-                    borderBottomColor: '#E8E8E8',
-                    borderBottomWidth: 1,
-                   },
-                   headerTitleAlign: 'center',
-                }}
-        />
-        <MainTab.Screen 
-           name='Profile' 
-           component={ProfileScreen} 
-           options={{
-            headerShown: false, 
-            tabBarIcon: ({focused, color, size}) => (
-               <TouchableOpacity>
-                   <AntDesign name="user" size={size} color={color} focused={focused}/>
-               </TouchableOpacity>
-            ),
-            tabBarHideOnKeyboard: true,
-            tabBarItemStyle: {
-                width: 70,
-                height: 40,
-            },
-            headerShown: false,
-            headerRight: () => (
-                <TouchableOpacity
-                 activeOpacity={0.8}
-                  style={{marginRight: 16 }}>
-                     <Feather name="log-out" size={24} color="#BDBDBD" />
-                </TouchableOpacity>
-               ),
-           }}
-        />
-    </MainTab.Navigator>
+         },
+         tabBarHideOnKeyboard: true,
+        }} name='Posts' component={PostsScreen}/>
+        <MainTab.Screen options={{
+            tabBarIcon: ({focused, size}) => <AntDesign name="plus" size={size} focused={focused} color="#FFFFFF" />,
+         tabBarStyle: {
+            display: 'none',
+         },
+         tabBarItemStyle: {
+            height: 40,
+            width: 50,
+            backgroundColor: "#FF6C00",
+            marginHorizontal: 31,
+            borderRadius: 20,
+         },
+         tabBarHideOnKeyboard: true,
+         headerLeft: () => (
+            <TouchableOpacity activeOpacity={0.7} style={{ marginLeft: 16 }} onPress={() => navigation.navigate("Posts")} >
+                <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+         )
+        }} name='Create Posts' component={CreatePostsScreen}/>
+       <MainTab.Screen options={{
+        tabBarIcon: ({focused, color, size}) => <AntDesign name="user" size={size} color={color} focused={focused} />,
+         headerShown: false,
+         tabBarItemStyle: {
+            height: 40,
+            width: 70,
+         },
+         tabBarHideOnKeyboard: true,
+         headerRight: () => {
+            <TouchableOpacity activeOpacity={0.8} style={{ marginRight: 16 }} onPress={signOut}>
+                <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+         }
+        }} name='Profile' component={ProfileScreen}/>
+  </MainTab.Navigator> 
 );
 };
 

@@ -106,8 +106,6 @@ const LoginScreen = ({ navigation }) => {
   input: {
     fontFamily: "Roboto-Regular",
     borderWidth: 1,
-    // paddingHorizontal: 16,
-    // marginBottom: 16,
     paddingLeft: 15,
     borderColor: "#e8e8e8",
     height: 50,
