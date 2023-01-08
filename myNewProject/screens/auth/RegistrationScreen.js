@@ -68,7 +68,7 @@ const onChangePhoto= () => {
             <KeyboardAvoidingView 
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-        <View style={{ marginBottom: isShowKeyboard ? 262 : 43 }}>
+        <View style={{ marginBottom: isShowKeyboard ? 32 : 43 }}>
           <Text style={styles.title}>Регистрация</Text>
           <TextInput 
           style={styles.input}  placeholder={"Логин"} placeholderTextColor={"#bdbdbd"} 
