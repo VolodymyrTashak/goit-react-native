@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, ImageBackground, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import { useDispatch } from 'react-redux'; 
 
 import { authSingInUser } from '../../redux/auth/authOperations';
@@ -14,6 +14,15 @@ const LoginScreen = ({ navigation }) => {
     const [state, setState] = useState(initialState);
     const [isHidePassword, setIsHidePassword] = useState(true);
     const dispatch = useDispatch();
+    const [dimensions, setDimensions] = useState(Dimensions.get("window").width - 20 * 2, );
+
+useEffect(() => {
+  const onChange = () => {
+    const windowWidth = Dimensions.get("window").width - 20 * 2;
+    setDimensions(windowWidth);
+  };
+  Dimensions.addEventListener("change", onChange);
+}, []);
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
